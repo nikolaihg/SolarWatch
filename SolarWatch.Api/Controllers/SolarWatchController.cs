@@ -22,17 +22,22 @@ public class SolarWatchController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<SunriseSunsetResult>> Get([Required] string city, DateOnly? date)
     {
-        var location = await _locationService.GetCordinates(city);
-        if (!date.HasValue)
+        try
         {
-            var result =
-                await _sunriseSunsetService.GetSunriseSunset(location.latitude, location.longitude);
+            var location = await _locationService.GetCordinates(city);
+
+            var result = !date.HasValue
+                ? await _sunriseSunsetService.GetSunriseSunset(location.latitude, location.longitude)
+                : await _sunriseSunsetService.GetSunriseSunset(
+                    location.latitude,
+                    location.longitude,
+                    date.Value);
+
             return Ok(result);
         }
-        else
+        catch (KeyNotFoundException ex)
         {
-            var result = await _sunriseSunsetService.GetSunriseSunset(location.latitude, location.longitude, date.Value);
-            return Ok(result);
+            return NotFound(ex.Message);
         }
     }
 }

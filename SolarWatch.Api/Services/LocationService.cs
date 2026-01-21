@@ -7,9 +7,9 @@ public class LocationService(IConfiguration config, ILogger<LocationService> log
     : ILocationService
 {
     private readonly string _openWeatherUrl = config["OPENWEATHER_URL"] ??
-                                              throw new InvalidOperationException("OpenWeather URL not configured.");
+                                              throw new ArgumentNullException("OpenWeather URL not configured.");
     private readonly string _openWeatherApiKey = config["OPENWEATHER_API_KEY"] ??
-                                                 throw new InvalidOperationException("OpenWeather API URL not configured.");
+                                                 throw new ArgumentNullException("OpenWeather API URL not configured.");
 
     public async Task<LatitudeLongitudeResult> GetCordinates(string city)
     {

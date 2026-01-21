@@ -15,7 +15,7 @@ public class SunriseSunsetService
     public SunriseSunsetService(IConfiguration config, ILogger<SunriseSunsetService> logger, HttpClient client)
     {
         _sunrisesunsetUrl = config["SUNRISESUNSET_URL"] ??
-                            throw new InvalidOperationException("SUNRISESUNSET_URL not configured.");
+                            throw new ArgumentNullException("SUNRISESUNSET_URL not configured.");
         _logger = logger;
         _httpClient = client;
     }
