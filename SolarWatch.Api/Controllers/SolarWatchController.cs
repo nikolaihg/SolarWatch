@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using SolarWatch.Api.DTOs;
 using SolarWatch.Api.Services;
@@ -11,20 +11,16 @@ public class SolarWatchController : ControllerBase
 {
     private readonly ISunriseSunsetService _sunriseSunsetService;
     private readonly ILocationService _locationService;
-    private readonly ILogger<SolarWatchController> _logger;
 
 
-    public SolarWatchController(ILogger<SolarWatchController> logger, ILocationService locationService,
-        ISunriseSunsetService sunriseSunsetService, IHttpClientFactory httpClientFactory)
+    public SolarWatchController(ILocationService locationService, ISunriseSunsetService sunriseSunsetService)
     {
-        _logger = logger;
         _locationService = locationService;
         _sunriseSunsetService = sunriseSunsetService;
     }
-
-
+    
     [HttpGet]
-    public async Task<ActionResult<SunriseSunsetResult>> Get(string city)
+    public async Task<ActionResult<SunriseSunsetResult>> Get([Required] string city)
     {
         var location = await _locationService.GetCordinates(city);
         var result = await _sunriseSunsetService.GetSunriseSunset(location.latitude, location.longitude);
