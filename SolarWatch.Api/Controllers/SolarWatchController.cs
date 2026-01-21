@@ -18,12 +18,21 @@ public class SolarWatchController : ControllerBase
         _locationService = locationService;
         _sunriseSunsetService = sunriseSunsetService;
     }
-    
+
     [HttpGet]
-    public async Task<ActionResult<SunriseSunsetResult>> Get([Required] string city)
+    public async Task<ActionResult<SunriseSunsetResult>> Get([Required] string city, DateOnly? date)
     {
         var location = await _locationService.GetCordinates(city);
-        var result = await _sunriseSunsetService.GetSunriseSunset(location.latitude, location.longitude);
-        return Ok(result);
+        if (!date.HasValue)
+        {
+            var result =
+                await _sunriseSunsetService.GetSunriseSunset(location.latitude, location.longitude);
+            return Ok(result);
+        }
+        else
+        {
+            var result = await _sunriseSunsetService.GetSunriseSunset(location.latitude, location.longitude, date.Value);
+            return Ok(result);
+        }
     }
 }

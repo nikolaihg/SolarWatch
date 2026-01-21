@@ -14,7 +14,7 @@ public class LocationService(IConfiguration config, ILogger<LocationService> log
     public async Task<LatitudeLongitudeResult> GetCordinates(string city)
     {
         logger.LogInformation("Calling OpenWeather API with params: {city}", city);
-        var resp = await client.GetAsync($"{_openWeatherUrl}/direct?q={city}&appid={_openWeatherApiKey}");
+        var resp = await client.GetAsync($"{_openWeatherUrl}?q={city}&appid={_openWeatherApiKey}");
 
         logger.LogInformation("OpenWeather API returned status code {StatusCode}", resp.StatusCode);
 

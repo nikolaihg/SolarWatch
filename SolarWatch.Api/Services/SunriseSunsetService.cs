@@ -20,9 +20,30 @@ public class SunriseSunsetService
         _httpClient = client;
     }
 
-    public async Task<SunriseSunsetResult> GetSunriseSunset(double latitdue, double longitude)
+    public async Task<SunriseSunsetResult> GetSunriseSunset(double latitude, double longitude)
     {
-        var url = $"{_sunrisesunsetUrl}/json?lat={latitdue}&lng={longitude}";
+        var url = $"{_sunrisesunsetUrl}?lat={latitude}&lng={longitude}";
+
+        _logger.LogInformation("Calling sunrise-sunrise API with url: {url}", url);
+
+        var response = await _httpClient.GetAsync(url);
+        _logger.LogInformation("Sunrise API returned status code {StatusCode}", response.StatusCode);
+
+        using var doc = JsonDocument.Parse(
+            await response.Content.ReadAsStringAsync());
+
+        var results = doc.RootElement.GetProperty("results");
+        var sunrise = results.GetProperty("sunrise").GetString();
+        var sunset = results.GetProperty("sunset").GetString();
+
+        return new SunriseSunsetResult(
+            Sunrise: sunrise ?? string.Empty,
+            Sunset: sunset ?? string.Empty);
+    }
+    
+    public async Task<SunriseSunsetResult> GetSunriseSunset(double latitude, double longitude, DateOnly date)
+    {
+        var url = $"{_sunrisesunsetUrl}?lat={latitude}&lng={longitude}&date={date:yy-MM-dd}";
 
         _logger.LogInformation("Calling sunrise-sunrise API with url: {url}", url);
 
