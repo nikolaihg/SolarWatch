@@ -1,4 +1,5 @@
 using dotenv.net;
+using SolarWatch.Api.Services;
 
 DotEnv.Load();
 
@@ -8,6 +9,8 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddHttpClient();
+builder.Services.AddScoped<ISunriseSunsetService, SunriseSunsetService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
 
 var app = builder.Build();
 
