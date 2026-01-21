@@ -55,7 +55,6 @@ public class SunriseSunsetService
     private string BuildUrl(double latitude, double longitude, DateOnly? date = null)
     {
         var baseUrl = $"{_sunrisesunsetUrl}?lat={latitude}&lng={longitude}";
-
         return date.HasValue
             ? $"{baseUrl}&date={date:yyyy-MM-dd}"
             : baseUrl;
