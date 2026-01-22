@@ -1,6 +1,7 @@
 using dotenv.net;
 using Microsoft.EntityFrameworkCore;
 using SolarWatch.Api.Data;
+using SolarWatch.Api.Repositories;
 using SolarWatch.Api.Services;
 
 DotEnv.Load();
@@ -27,6 +28,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<ISunriseSunsetService, SunriseSunsetService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<ISolarDataRepository, SolarDataRepository>();
 
 var app = builder.Build();
 
