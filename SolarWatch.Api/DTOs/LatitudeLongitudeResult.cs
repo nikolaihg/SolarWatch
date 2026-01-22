@@ -1,3 +1,6 @@
 ﻿namespace SolarWatch.Api.DTOs;
 
-public record LatitudeLongitudeResult(double latitude, double longitude);
+public record LatitudeLongitudeResult(
+    double latitude,
+    double longitude
+);

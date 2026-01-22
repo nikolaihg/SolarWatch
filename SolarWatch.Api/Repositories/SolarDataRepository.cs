@@ -21,7 +21,16 @@ public class SolarDataRepository(SolarWatchDbContext context) : ISolarDataReposi
 
     public async Task<Solar?> Read(int id)
     {
-        return await _context.Solars.Include(s => s.City).FirstAsync(s => s.Id == id);
+        return await _context.Solars.Include(s => s.City).FirstOrDefaultAsync(s => s.Id == id);
+    }
+
+    public async Task<Solar?> ReadByCityAndDate(int cityId, DateOnly date)
+    {
+        return await _context.Solars
+            .Include(s => s.City)
+            .FirstOrDefaultAsync(s =>
+                s.CityId == cityId &&
+                s.Date == date);
     }
 
     public async Task<bool> Update(int id, Solar item)

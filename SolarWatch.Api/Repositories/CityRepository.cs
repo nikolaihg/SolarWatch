@@ -22,7 +22,17 @@ public class CityRepository(SolarWatchDbContext context) : ICityRepository
 
     public async Task<City?> Read(int id)
     {
-        return await _context.Cities.Include(c => c.SolarData).FirstAsync(c => c.Id == id);
+        return await _context.Cities.Include(c => c.SolarData).FirstOrDefaultAsync(c => c.Id == id);
+    }
+    
+    public async Task<City?> ReadByName(string name)
+    {
+        return await _context.Cities.Include(c => c.SolarData).FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower());
+    }
+
+    public async Task<City?> ReadByCoordinates(double latitude, double longitude)
+    {
+        return await _context.Cities.Include(c => c.SolarData).FirstOrDefaultAsync(c => c.Latitude == latitude && c.Longitude == longitude);
     }
 
     public async Task<bool> Update(int id, City item)
