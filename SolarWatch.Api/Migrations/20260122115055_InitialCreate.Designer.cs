@@ -12,8 +12,8 @@ using SolarWatch.Api.Data;
 namespace SolarWatch.Api.Migrations
 {
     [DbContext(typeof(SolarWatchDbContext))]
-    [Migration("20260122101437_FourthMigration")]
-    partial class FourthMigration
+    [Migration("20260122115055_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,8 +49,7 @@ namespace SolarWatch.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CityId", "Date")
-                        .IsUnique();
+                    b.HasIndex("CityId");
 
                     b.ToTable("Solars");
                 });
@@ -63,6 +62,10 @@ namespace SolarWatch.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<double>("Latitude")
                         .HasColumnType("double precision");
 
@@ -71,13 +74,13 @@ namespace SolarWatch.Api.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("text");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Cities");
                 });

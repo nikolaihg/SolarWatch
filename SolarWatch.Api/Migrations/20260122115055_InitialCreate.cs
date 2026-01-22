@@ -18,9 +18,11 @@ namespace SolarWatch.Api.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    latitude = table.Column<double>(type: "double precision", nullable: false),
-                    longitude = table.Column<double>(type: "double precision", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Latitude = table.Column<double>(type: "double precision", nullable: false),
+                    Longitude = table.Column<double>(type: "double precision", nullable: false),
+                    Country = table.Column<string>(type: "text", nullable: false),
+                    State = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,21 +30,21 @@ namespace SolarWatch.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Solar",
+                name: "Solars",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Sunrise = table.Column<string>(type: "text", nullable: false),
                     Sunset = table.Column<string>(type: "text", nullable: false),
-                    date = table.Column<DateOnly>(type: "date", nullable: false),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false),
                     CityId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Solar", x => x.Id);
+                    table.PrimaryKey("PK_Solars", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Solar_Cities_CityId",
+                        name: "FK_Solars_Cities_CityId",
                         column: x => x.CityId,
                         principalTable: "Cities",
                         principalColumn: "Id",
@@ -50,8 +52,8 @@ namespace SolarWatch.Api.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Solar_CityId",
-                table: "Solar",
+                name: "IX_Solars_CityId",
+                table: "Solars",
                 column: "CityId");
         }
 
@@ -59,7 +61,7 @@ namespace SolarWatch.Api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Solar");
+                name: "Solars");
 
             migrationBuilder.DropTable(
                 name: "Cities");

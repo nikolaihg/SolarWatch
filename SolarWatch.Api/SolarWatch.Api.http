@@ -3,4 +3,52 @@
 GET {{SolarWatch.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
+### 
+
+GET http://localhost:5195/api/solarwatch?city=new york
+Accept: application/json
+
 ###
+
+GET http://localhost:5195/api/solarwatch?city=paris
+Accept: application/json
+
+###
+
+GET http://localhost:5195/api/solarwatch?city=bergen
+Accept: application/json
+
+###
+
+GET http://localhost:5195/api/solarwatch?city=tokyo
+Accept: application/json
+
+###
+
+GET http://localhost:5195/api/solarwatch?city=sydney
+Accept: application/json
+
+###
+
+GET http://localhost:5195/api/solarwatch?city=new%20york&date=2024-05-23
+Accept: application/json
+
+###
+
+GET http://localhost:5195/api/solarwatch?city=paris&date=2024-06-01
+Accept: application/json
+
+###
+
+GET http://localhost:5195/api/solarwatch?city=bergen&date=2024-12-15
+Accept: application/json
+
+###
+
+GET http://localhost:5195/api/solarwatch?city=tokyo&date=2024-03-20
+Accept: application/json
+
+###
+
+GET http://localhost:5195/api/solarwatch?city=sydney&date=2024-09-10
+Accept: application/json

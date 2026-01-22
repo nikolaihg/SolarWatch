@@ -59,6 +59,10 @@ namespace SolarWatch.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<double>("Latitude")
                         .HasColumnType("double precision");
 
@@ -66,6 +70,10 @@ namespace SolarWatch.Api.Migrations
                         .HasColumnType("double precision");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("State")
                         .IsRequired()
                         .HasColumnType("text");
 

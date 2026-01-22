@@ -58,9 +58,15 @@ public class LocationService : ILocationService
         }
 
         var firstResult = root[0];
-
         var latitude = firstResult.GetProperty("lat").GetDouble();
         var longitude = firstResult.GetProperty("lon").GetDouble();
+        string? country = firstResult.TryGetProperty("country", out var countryProp)
+            ? countryProp.GetString()
+            : string.Empty;
+
+        string? state = firstResult.TryGetProperty("state", out var stateProp)
+            ? stateProp.GetString()
+            : string.Empty;
 
         _logger.LogInformation(
             "OpenWeather API returned latitude: {latitude}, longitude: {longitude}",
@@ -71,7 +77,9 @@ public class LocationService : ILocationService
         {
             Name = city,
             Latitude = latitude,
-            Longitude = longitude
+            Longitude = longitude,
+            Country = country,
+            State = state
         };
         await _cityRepository.Create(newCity);
         _logger.LogInformation("City saved to database: {city}", newCity.Name);

@@ -16,4 +16,12 @@ public class Solar
     {
         
     }
+
+    public Solar(int cityId, DateOnly date, string sunrise, string sunset)
+    {
+        CityId = cityId;
+        Date = date;
+        Sunrise = sunrise;
+        Sunset = sunset;
+    }
 }
