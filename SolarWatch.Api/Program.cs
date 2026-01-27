@@ -1,6 +1,7 @@
 using System.Text;
 using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SolarWatch.Api.Data;
@@ -14,14 +15,9 @@ var builder = WebApplication.CreateBuilder(args);
 string jwtIssuer = Environment.GetEnvironmentVariable("JWT_VALID_ISSUER")!;
 string jwtAudience = Environment.GetEnvironmentVariable("JWT_VALID_AUDIENCE")!;
 string jwtKey = Environment.GetEnvironmentVariable("JWT_SIGNING_KEY")!;
+var connectionString = BuildConnectionString();
 
-var host = builder.Configuration["DB_HOST"] ?? throw new ArgumentException("DB_HOST is required");
-var port = builder.Configuration["DB_PORT"] ?? throw new ArgumentException("DB_PORT is required");
-var database = builder.Configuration["DB_NAME"] ?? throw new ArgumentException("DB_NAME is required");
-var username = builder.Configuration["DB_USER"] ?? throw new ArgumentException("DB_USER is required");
-var password = builder.Configuration["DB_PASSWORD"] ?? throw new ArgumentException("DB_PASSWORD is required");
-
-var connectionString = $"Host={host};Port={port};Username={username};Password={password};Database={database}";
+builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -41,19 +37,18 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddDbContext<SolarWatchDbContext>(options =>
+builder.Services.AddDbContext<SolarWatchDbContext>(options => { options.UseNpgsql(connectionString); });
+builder.Services.AddDbContext<UserDbContext>(options => { options.UseNpgsql(connectionString); });
+builder.Services.AddIdentityCore<IdentityUser>(options =>
 {
-    options.UseNpgsql(connectionString);
-});
-builder.Services.AddDbContext<UserDbContext>(options =>
-{
-    options.UseNpgsql(connectionString);
-});
+    options.User.RequireUniqueEmail = true;
+    options.Password.RequiredLength = 8;
+}).AddRoles<IdentityRole>().AddEntityFrameworkStores<UserDbContext>().AddDefaultTokenProviders();
 
-builder.Configuration.AddEnvironmentVariables();
+
 builder.Services.AddControllers();
+
 builder.Services.AddOpenApi();
-builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpClient();
 
@@ -68,8 +63,6 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
@@ -78,3 +71,14 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+string BuildConnectionString()
+{
+    var host = builder.Configuration["DB_HOST"] ?? throw new ArgumentException("DB_HOST is required");
+    var port = builder.Configuration["DB_PORT"] ?? throw new ArgumentException("DB_PORT is required");
+    var database = builder.Configuration["DB_NAME"] ?? throw new ArgumentException("DB_NAME is required");
+    var username = builder.Configuration["DB_USER"] ?? throw new ArgumentException("DB_USER is required");
+    var password = builder.Configuration["DB_PASSWORD"] ?? throw new ArgumentException("DB_PASSWORD is required");
+
+    return $"Host={host};Port={port};Username={username};Password={password};Database={database}";
+}
