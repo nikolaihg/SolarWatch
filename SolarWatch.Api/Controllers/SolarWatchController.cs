@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SolarWatch.Api.DTOs;
 using SolarWatch.Api.Services;
@@ -7,6 +8,7 @@ namespace SolarWatch.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class SolarWatchController : ControllerBase
 {
     private readonly ISunriseSunsetService _sunriseSunsetService;

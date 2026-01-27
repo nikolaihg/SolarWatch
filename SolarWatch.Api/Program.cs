@@ -1,5 +1,8 @@
+using System.Text;
 using dotenv.net;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SolarWatch.Api.Data;
 using SolarWatch.Api.Repositories;
 using SolarWatch.Api.Services;
@@ -7,6 +10,29 @@ using SolarWatch.Api.Services;
 DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
+
+string jwtIssuer = Environment.GetEnvironmentVariable("JWT_VALID_ISSUER")!;
+string jwtAudience = Environment.GetEnvironmentVariable("JWT_VALID_AUDIENCE")!;
+string jwtExpires = Environment.GetEnvironmentVariable("JWT_EXPIRES_IN_MINUTES")!;
+string jwtKey = Environment.GetEnvironmentVariable("JWT_SIGNING_KEY")!;
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+    });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddDbContext<SolarWatchDbContext>(options =>
 {
@@ -42,6 +68,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
