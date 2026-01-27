@@ -39,11 +39,11 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddDbContext<SolarWatchDbContext>(options => { options.UseNpgsql(connectionString); });
 builder.Services.AddDbContext<UserDbContext>(options => { options.UseNpgsql(connectionString); });
-builder.Services.AddIdentityCore<IdentityUser>(options =>
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     options.User.RequireUniqueEmail = true;
     options.Password.RequiredLength = 8;
-}).AddRoles<IdentityRole>().AddEntityFrameworkStores<UserDbContext>().AddDefaultTokenProviders();
+}).AddEntityFrameworkStores<UserDbContext>().AddDefaultTokenProviders();
 
 
 builder.Services.AddControllers();

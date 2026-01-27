@@ -45,4 +45,39 @@ public class AuthController : ControllerBase
             }
         });
     }
+    
+    [HttpPost("login")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Login([FromBody] UserDto dto)
+    {
+        var user = await _userManager.FindByEmailAsync(dto.Email);
+        if (user == null)
+            return Unauthorized("Invalid email or password!");
+        var passwordValid = await _userManager.CheckPasswordAsync(user, dto.Password);
+        if (!passwordValid)
+            return Unauthorized("Invalid email or password!");
+        var token = _jwtService.GenerateToken(user);
+        
+        return Ok(new
+        {
+            token,
+            expiresIn = int.Parse(
+                _config["JWT_EXPIRES_IN_MINUTES"]
+                ?? throw new InvalidOperationException("JWT_EXPIRES_IN_MINUTES not configured")
+            ),
+            user = new { user.Id, user.Email }
+        });
+    }
+    
+    [Authorize]
+    [HttpGet("ping")]
+    public IActionResult Ping()
+    {
+        return Ok(new
+        {
+            message = "PONG!",
+            user = User.Identity?.Name
+        });
+    }
+
 }
