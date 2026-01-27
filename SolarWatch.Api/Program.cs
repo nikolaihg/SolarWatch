@@ -56,6 +56,7 @@ builder.Services.AddScoped<ISunriseSunsetService, SunriseSunsetService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<ISolarDataRepository, SolarDataRepository>();
+builder.Services.AddScoped<IJwtService, JwtService>();
 
 var app = builder.Build();
 

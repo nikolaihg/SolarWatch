@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SolarWatch.Api.DTOs;
+using SolarWatch.Api.Services;
 
 namespace SolarWatch.Api.Controllers;
 
@@ -10,15 +11,18 @@ namespace SolarWatch.Api.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly UserManager<IdentityUser> _userManager;
+    private readonly IJwtService _jwtService;
+    private readonly IConfiguration _config;
 
-    public AuthController(UserManager<IdentityUser> userManager)
+    public AuthController(UserManager<IdentityUser> userManager, IJwtService jwtService, IConfiguration config)
     {
         _userManager = userManager;
+        _jwtService = jwtService;
+        _config = config;
     }
 
     [HttpPost("register")]
     [AllowAnonymous]
-    
     public async Task<IActionResult> Register([FromBody] UserDto dto)
     {
         var user = new IdentityUser
@@ -29,6 +33,16 @@ public class AuthController : ControllerBase
         var result = await _userManager.CreateAsync(user, dto.Password);
         if (!result.Succeeded)
             return BadRequest(result.Errors);
-        return Ok($"User created for {dto.Email}");
+
+        var token = _jwtService.GenerateToken(user);
+
+        return Ok(new
+        {
+            token, expiresIn = int.Parse(_config["JWT_EXPIRES_IN_MINUTES"] ?? throw new ArgumentNullException("JWT_EXPIRES_IN_MINUTES not configured")),
+            user = new
+            {
+                user.Id, user.Email
+            }
+        });
     }
 }
