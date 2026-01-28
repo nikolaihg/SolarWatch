@@ -73,6 +73,32 @@ public class AuthController : ControllerBase
         });
     }
     
+    [Authorize(Roles = "Admin")]
+    [HttpPost("make-admin/{userId}")]
+    public async Task<IActionResult> MakeAdmin(string userId)
+    {
+        try
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return NotFound($"User with id {userId} not found.");
+
+            var isAlreadyAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            if (isAlreadyAdmin)
+                return BadRequest("User is already an admin.");
+
+            var result = await _userManager.AddToRoleAsync(user, "Admin");
+            if (!result.Succeeded)
+                return BadRequest($"Failed to make user admin: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+
+            return Ok(new { message = $"User {user.Email} is now an admin." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     [Authorize]
     [HttpGet("ping")]
     public IActionResult Ping()
