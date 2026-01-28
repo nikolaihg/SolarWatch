@@ -22,6 +22,7 @@ public class SolarWatchController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "User, Admin")]
     public async Task<ActionResult<SunriseSunsetResult>> Get([Required] string city, DateOnly? date)
     {
         try

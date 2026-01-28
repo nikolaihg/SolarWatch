@@ -33,8 +33,10 @@ public class AuthController : ControllerBase
         var result = await _userManager.CreateAsync(user, dto.Password);
         if (!result.Succeeded)
             return BadRequest(result.Errors);
-
-        var token = _jwtService.GenerateToken(user);
+        
+        await _userManager.AddToRoleAsync(user, "User");
+        var roles = await _userManager.GetRolesAsync(user);
+        var token = _jwtService.GenerateToken(user, roles);
 
         return Ok(new
         {
@@ -56,7 +58,9 @@ public class AuthController : ControllerBase
         var passwordValid = await _userManager.CheckPasswordAsync(user, dto.Password);
         if (!passwordValid)
             return Unauthorized("Invalid email or password!");
-        var token = _jwtService.GenerateToken(user);
+        
+        var roles = await _userManager.GetRolesAsync(user);
+        var token = _jwtService.GenerateToken(user, roles);
         
         return Ok(new
         {
