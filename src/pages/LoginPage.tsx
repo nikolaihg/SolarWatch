@@ -1,10 +1,10 @@
+import InputForm from "../components/InputForm";
+
 function LoginPage() {
     return (
         <>
-            <h1>Login</h1>
-            <div className="card">
-                <p>Please log in: </p>
-            </div>
+            <h1>Please log in:</h1>
+            <InputForm />
         </>
     );
 }
