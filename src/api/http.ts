@@ -1,8 +1,20 @@
+import { getToken } from "./auth";
+
 const API_URL = '/api';
+
+function getAuthHeaders(): HeadersInit {
+  const token = getToken();
+
+  return {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
+  };
+}
 
 export async function get<T>(endpoint: string): Promise<T> {
   const res = await fetch(`${API_URL}${endpoint}`, {
-    headers: { 'Accept': 'application/json' },
+    headers: getAuthHeaders(),
   });
 
   if (!res.ok) {
@@ -20,10 +32,7 @@ export async function get<T>(endpoint: string): Promise<T> {
 export async function post<T>(endpoint: string, body: unknown): Promise<T> {
   const res = await fetch(`${API_URL}${endpoint}`, {
     method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
+    headers: getAuthHeaders(),
     body: JSON.stringify(body),
   });
 

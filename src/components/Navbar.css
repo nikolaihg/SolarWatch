@@ -3,8 +3,6 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #1a1a1a;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .nav-button {
@@ -13,7 +11,6 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .home-button {
