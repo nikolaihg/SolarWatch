@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, Outlet } from 'react-router-dom'
 import { getToken } from '../../api/auth'
-import './Navbar.css'
+
 
 interface NavbarProps {
   onLogout: () => void
@@ -38,20 +38,32 @@ function Navbar({ onLogout }: NavbarProps) {
 
   return (
     <>
-      <nav className="navbar">
-        <div className="nav-left">
-          <button className="nav-button home-button" onClick={() => navigate('/')}>
-            Home
-          </button>
-        </div>
-        <div className="nav-right">
-          {email && <span className="user-email">{email}</span>}
-          <button className="nav-button logout-button" onClick={onLogout}>
-            Logout
-          </button>
+      <nav className="bg-slate-800 text-white shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16 items-center">
+            <div className="flex-shrink-0">
+              <button 
+                className="text-xl font-bold hover:text-blue-400 transition-colors" 
+                onClick={() => navigate('/')}
+              >
+                SolarWatch
+              </button>
+            </div>
+            <div className="flex items-center gap-4">
+              {email && <span className="text-sm text-gray-300 hidden md:inline">{email}</span>}
+              <button 
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer" 
+                onClick={onLogout}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
         </div>
       </nav>
-      <Outlet />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Outlet />
+      </div>
     </>
   )
 }

@@ -49,29 +49,40 @@ function InputForm({ buttonLabel, onSubmitSuccess, validateComplexity = true }: 
   };
 
   return (
-    <div className="card form-card">
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Email:</label>
+    <div className="bg-white rounded-xl shadow-xl p-8 max-w-sm w-full border border-gray-100">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-700">Email</label>
           <input
-            className="email"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder="john@example.com"
           />
         </div>
-        <div className="form-group">
-          <label>Password:</label>
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-700">Password</label>
           <input
-            className="password"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
           />
         </div>
-        <button type="submit">{buttonLabel}</button>
+        <button 
+          type="submit"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors"
+        >
+          {buttonLabel}
+        </button>
       </form>
-      {error && <div className="error-message">{error}</div>}
+      {error && (
+        <div className="mt-4 p-3 bg-red-50 text-red-700 text-sm rounded-md border border-red-200">
+          {error}
+        </div>
+      )}
     </div>
   );
 }
