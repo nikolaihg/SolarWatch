@@ -1,15 +1,19 @@
 import { useState } from "react";
 
 type InputFormProps = {
+  buttonLabel: string;
   onSubmitSuccess?: (data: { email: string; password: string }) => void;
+  validateComplexity?: boolean;
 };
 
-function InputForm({ onSubmitSuccess }: InputFormProps) {
+function InputForm({ buttonLabel, onSubmitSuccess, validateComplexity = true }: InputFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError(null);
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -20,12 +24,12 @@ function InputForm({ onSubmitSuccess }: InputFormProps) {
     const validations = [
       { condition: !email.trim(), message: "Email is required" },
       {
-        condition: email && !emailRegex.test(email),
+        condition: validateComplexity && email && !emailRegex.test(email),
         message: "Email must be a valid email address",
       },
       { condition: !password, message: "Password is required" },
       {
-        condition: password && !passwordRegex.test(password),
+        condition: validateComplexity && password && !passwordRegex.test(password),
         message:
           "Password must be ≥8 characters and include uppercase, lowercase, number, and symbol",
       },
@@ -33,14 +37,14 @@ function InputForm({ onSubmitSuccess }: InputFormProps) {
 
     for (const validation of validations) {
       if (validation.condition) {
-        alert(validation.message);
+        setError(validation.message);
         return;
       }
     }
 
     const formData = { email, password };
 
-    console.log("Login success:", formData);
+    console.log(`${buttonLabel} success:`, formData);
     onSubmitSuccess?.(formData);
   };
 
@@ -65,9 +69,9 @@ function InputForm({ onSubmitSuccess }: InputFormProps) {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">{buttonLabel}</button>
       </form>
-      
+      {error && <div className="error-message">{error}</div>}
     </div>
   );
 }
