@@ -4,7 +4,7 @@ import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import RegistrationPage from './pages/RegistrationPage'
 import NotFoundPage from './pages/NotFoundPage'
-import Navbar from './components/Navbar'
+import Navbar from './components/Navbar/Navbar'
 import ProtectedRoute from './components/ProtectedRoute'
 import { logout } from './api/auth'
 

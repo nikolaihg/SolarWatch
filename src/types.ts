@@ -8,12 +8,10 @@ export interface CityDto {
 }
 
 export interface SolarDto {
-  id: number;
   sunrise: string;
   sunset: string;
-  date: string;
-  cityId: number;
 }
+
 
 export interface UserDto {
   email: string;
