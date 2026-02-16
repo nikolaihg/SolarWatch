@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SolarWatch.Api.Data;
 using SolarWatch.Api.DTOs;
-using SolarWatch.Api.Repositories;
+using SolarWatch.Api.Services;
 
 namespace SolarWatch.Api.Controllers;
 
@@ -12,11 +11,11 @@ namespace SolarWatch.Api.Controllers;
 [Authorize]
 public class SolarDataController : ControllerBase
 {
-    private readonly ISolarDataRepository _solarDataRepository;
+    private readonly ISolarDataService _solarDataService;
 
-    public SolarDataController(ISolarDataRepository solarDataRepository)
+    public SolarDataController(ISolarDataService solarDataService)
     {
-        _solarDataRepository = solarDataRepository;
+        _solarDataService = solarDataService;
     }
 
     [HttpGet]
@@ -25,8 +24,7 @@ public class SolarDataController : ControllerBase
     {
         try
         {
-            var solarData = await _solarDataRepository.GetAll();
-            var solarDtos = solarData.Select(s => MapToDto(s)).ToList();
+            var solarDtos = await _solarDataService.GetAllSolarData();
             return Ok(solarDtos);
         }
         catch (Exception ex)
@@ -41,13 +39,13 @@ public class SolarDataController : ControllerBase
     {
         try
         {
-            var solar = await _solarDataRepository.Read(id);
-            if (solar == null)
+            var solarDto = await _solarDataService.GetSolarDataById(id);
+            if (solarDto == null)
             {
                 return NotFound($"Solar data with id {id} not found.");
             }
 
-            return Ok(MapToDto(solar));
+            return Ok(solarDto);
         }
         catch (Exception ex)
         {
@@ -61,9 +59,8 @@ public class SolarDataController : ControllerBase
     {
         try
         {
-            var solar = MapToEntity(solarDto);
-            var createdSolar = await _solarDataRepository.Create(solar);
-            return CreatedAtAction(nameof(GetById), new { id = createdSolar.Id }, MapToDto(createdSolar));
+            var createdSolar = await _solarDataService.CreateSolarData(solarDto);
+            return CreatedAtAction(nameof(GetById), new { id = createdSolar.Id }, createdSolar);
         }
         catch (Exception ex)
         {
@@ -77,8 +74,7 @@ public class SolarDataController : ControllerBase
     {
         try
         {
-            var solar = MapToEntity(solarDto);
-            var success = await _solarDataRepository.Update(id, solar);
+            var success = await _solarDataService.UpdateSolarData(id, solarDto);
             if (!success)
             {
                 return NotFound($"Solar data with id {id} not found.");
@@ -98,7 +94,7 @@ public class SolarDataController : ControllerBase
     {
         try
         {
-            var success = await _solarDataRepository.Delete(id);
+            var success = await _solarDataService.DeleteSolarData(id);
             if (!success)
             {
                 return NotFound($"Solar data with id {id} not found.");
@@ -110,28 +106,5 @@ public class SolarDataController : ControllerBase
         {
             return StatusCode(500, ex.Message);
         }
-    }
-
-    private static SolarDto MapToDto(Solar solar)
-    {
-        return new SolarDto
-        {
-            Id = solar.Id,
-            Sunrise = solar.Sunrise,
-            Sunset = solar.Sunset,
-            Date = solar.Date,
-            CityId = solar.CityId
-        };
-    }
-
-    private static Solar MapToEntity(SolarDto solarDto)
-    {
-        return new Solar
-        {
-            Sunrise = solarDto.Sunrise,
-            Sunset = solarDto.Sunset,
-            Date = solarDto.Date,
-            CityId = solarDto.CityId
-        };
     }
 }

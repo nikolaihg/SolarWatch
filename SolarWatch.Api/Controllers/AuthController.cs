@@ -23,7 +23,7 @@ public class AuthController : ControllerBase
 
     [HttpPost("register")]
     [AllowAnonymous]
-    public async Task<IActionResult> Register([FromBody] UserDto dto)
+    public async Task<ActionResult<AuthResponseDto>> Register([FromBody] UserDto dto)
     {
         var user = new IdentityUser
         {
@@ -33,24 +33,21 @@ public class AuthController : ControllerBase
         var result = await _userManager.CreateAsync(user, dto.Password);
         if (!result.Succeeded)
             return BadRequest(result.Errors);
-        
+
         await _userManager.AddToRoleAsync(user, "User");
         var roles = await _userManager.GetRolesAsync(user);
         var token = _jwtService.GenerateToken(user, roles);
 
-        return Ok(new
-        {
-            token, expiresIn = int.Parse(_config["JWT_EXPIRES_IN_MINUTES"] ?? throw new ArgumentNullException("JWT_EXPIRES_IN_MINUTES not configured")),
-            user = new
-            {
-                user.Id, user.Email
-            }
-        });
+        var expiresIn = int.Parse(_config["JWT_EXPIRES_IN_MINUTES"] ?? throw new ArgumentNullException("JWT_EXPIRES_IN_MINUTES not configured"));
+        var userInfo = new UserInfoDto(user.Id, user.Email!);
+        var response = new AuthResponseDto(token, expiresIn, userInfo);
+
+        return Ok(response);
     }
-    
+
     [HttpPost("login")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login([FromBody] UserDto dto)
+    public async Task<ActionResult<AuthResponseDto>> Login([FromBody] UserDto dto)
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
         if (user == null)
@@ -58,21 +55,20 @@ public class AuthController : ControllerBase
         var passwordValid = await _userManager.CheckPasswordAsync(user, dto.Password);
         if (!passwordValid)
             return Unauthorized("Invalid email or password!");
-        
+
         var roles = await _userManager.GetRolesAsync(user);
         var token = _jwtService.GenerateToken(user, roles);
-        
-        return Ok(new
-        {
-            token,
-            expiresIn = int.Parse(
-                _config["JWT_EXPIRES_IN_MINUTES"]
-                ?? throw new InvalidOperationException("JWT_EXPIRES_IN_MINUTES not configured")
-            ),
-            user = new { user.Id, user.Email }
-        });
+
+        var expiresIn = int.Parse(
+            _config["JWT_EXPIRES_IN_MINUTES"]
+            ?? throw new InvalidOperationException("JWT_EXPIRES_IN_MINUTES not configured")
+        );
+        var userInfo = new UserInfoDto(user.Id, user.Email!);
+        var response = new AuthResponseDto(token, expiresIn, userInfo);
+
+        return Ok(response);
     }
-    
+
     [Authorize(Roles = "Admin")]
     [HttpPost("make-admin/{userId}")]
     public async Task<IActionResult> MakeAdmin(string userId)

@@ -2,8 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SolarWatch.Api.DTOs;
-using SolarWatch.Api.Models;
-using SolarWatch.Api.Repositories;
+using SolarWatch.Api.Services;
 
 namespace SolarWatch.Api.Controllers;
 
@@ -12,11 +11,11 @@ namespace SolarWatch.Api.Controllers;
 [Authorize]
 public class CityController : ControllerBase
 {
-    private readonly ICityRepository _cityRepository;
+    private readonly ICityService _cityService;
 
-    public CityController(ICityRepository cityRepository)
+    public CityController(ICityService cityService)
     {
-        _cityRepository = cityRepository;
+        _cityService = cityService;
     }
 
     [HttpGet]
@@ -25,8 +24,7 @@ public class CityController : ControllerBase
     {
         try
         {
-            var cities = await _cityRepository.GetAll();
-            var cityDtos = cities.Select(c => MapToDto(c)).ToList();
+            var cityDtos = await _cityService.GetAllCities();
             return Ok(cityDtos);
         }
         catch (Exception ex)
@@ -41,8 +39,7 @@ public class CityController : ControllerBase
     {
         try
         {
-            var cities = await _cityRepository.GetAll();
-            var cityNameDtos = cities.Select(c => new CityNameDto { Name = c.Name.ToLower() }).ToList();
+            var cityNameDtos = await _cityService.GetAllCityNames();
             return Ok(cityNameDtos);
         }
         catch (Exception ex)
@@ -57,13 +54,13 @@ public class CityController : ControllerBase
     {
         try
         {
-            var city = await _cityRepository.Read(id);
-            if (city == null)
+            var cityDto = await _cityService.GetCityById(id);
+            if (cityDto == null)
             {
                 return NotFound($"City with id {id} not found.");
             }
 
-            return Ok(MapToDto(city));
+            return Ok(cityDto);
         }
         catch (Exception ex)
         {
@@ -77,9 +74,8 @@ public class CityController : ControllerBase
     {
         try
         {
-            var city = MapToEntity(cityDto);
-            var createdCity = await _cityRepository.Create(city);
-            return CreatedAtAction(nameof(GetById), new { id = createdCity.Id }, MapToDto(createdCity));
+            var createdCity = await _cityService.CreateCity(cityDto);
+            return CreatedAtAction(nameof(GetById), new { id = createdCity.Id }, createdCity);
         }
         catch (Exception ex)
         {
@@ -93,8 +89,7 @@ public class CityController : ControllerBase
     {
         try
         {
-            var city = MapToEntity(cityDto);
-            var success = await _cityRepository.Update(id, city);
+            var success = await _cityService.UpdateCity(id, cityDto);
             if (!success)
             {
                 return NotFound($"City with id {id} not found.");
@@ -114,7 +109,7 @@ public class CityController : ControllerBase
     {
         try
         {
-            var success = await _cityRepository.Delete(id);
+            var success = await _cityService.DeleteCity(id);
             if (!success)
             {
                 return NotFound($"City with id {id} not found.");
@@ -126,30 +121,5 @@ public class CityController : ControllerBase
         {
             return StatusCode(500, ex.Message);
         }
-    }
-
-    private static CityDto MapToDto(City city)
-    {
-        return new CityDto
-        {
-            Id = city.Id,
-            Name = city.Name,
-            Latitude = city.Latitude,
-            Longitude = city.Longitude,
-            Country = city.Country,
-            State = city.State
-        };
-    }
-
-    private static City MapToEntity(CityDto cityDto)
-    {
-        return new City
-        {
-            Name = cityDto.Name,
-            Latitude = cityDto.Latitude,
-            Longitude = cityDto.Longitude,
-            Country = cityDto.Country,
-            State = cityDto.State
-        };
     }
 }
