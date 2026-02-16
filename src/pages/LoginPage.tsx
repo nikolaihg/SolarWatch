@@ -20,14 +20,16 @@ function LoginPage() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-[60vh]">
-            <h1 className="text-3xl font-bold text-gray-800 mb-8">Welcome Back</h1>
+            <h1 className="text-3xl font-bold text-gray-800 mb-8">Welcome</h1>
             {error && <div className="mb-4 p-3 bg-red-100 text-red-800 rounded-lg max-w-sm w-full text-center">{error}</div>}
             <InputForm onSubmitSuccess={handleLogin} buttonLabel="Login" validateComplexity={false} />
             <div className="mt-6 text-gray-600">
-                <p>Don't have an account?</p>
-                <Link to="/register" className="text-blue-600 hover:text-blue-800 font-medium hover:underline">
-                    Register here
-                </Link>
+                <p>Don't have an account? 
+                    <Link to="/register" className="text-blue-600 hover:text-blue-800 font-medium hover:underline">
+                        Register here
+                    </Link>
+                </p>
+
             </div>
         </div>
     );

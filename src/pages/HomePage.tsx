@@ -3,9 +3,9 @@ import { Link } from "react-router-dom"
 function HomePage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
-      <h1 className="text-4xl font-extrabold text-blue-900 mb-6">Welcome to SolarWatch</h1>
+      <h1 className="text-4xl font-extrabold text-blue-900 mb-6">Welcome to SolarWatch!</h1>
       <p className="text-xl text-gray-700 mb-8 max-w-2xl">
-        Discover sunrise and sunset times for any city in the world. Plan your day with accurate solar data.
+        Discover sunrise and sunset times for any city in the world.
       </p>
       <Link 
         to="/solar" 
