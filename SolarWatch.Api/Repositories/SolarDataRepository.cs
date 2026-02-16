@@ -3,9 +3,9 @@ using SolarWatch.Api.Data;
 
 namespace SolarWatch.Api.Repositories;
 
-public class SolarDataRepository(SolarWatchDbContext context) : ISolarDataRepository
+public class SolarDataRepository(AppDbContext context) : ISolarDataRepository
 {
-    private readonly SolarWatchDbContext _context = context;
+    private readonly AppDbContext _context = context;
     
     public async Task<IEnumerable<Solar>> GetAll()
     {

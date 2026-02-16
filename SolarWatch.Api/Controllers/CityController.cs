@@ -35,6 +35,22 @@ public class CityController : ControllerBase
         }
     }
 
+    [HttpGet("names")]
+    [Authorize(Roles = "User, Admin")]
+    public async Task<ActionResult<IEnumerable<CityNameDto>>> GetAllNames()
+    {
+        try
+        {
+            var cities = await _cityRepository.GetAll();
+            var cityNameDtos = cities.Select(c => new CityNameDto { Name = c.Name.ToLower() }).ToList();
+            return Ok(cityNameDtos);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     [HttpGet("{id}")]
     [Authorize(Roles = "User, Admin")]
     public async Task<ActionResult<CityDto>> GetById([Required] int id)

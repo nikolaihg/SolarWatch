@@ -4,9 +4,9 @@ using SolarWatch.Api.Models;
 
 namespace SolarWatch.Api.Repositories;
 
-public class CityRepository(SolarWatchDbContext context) : ICityRepository
+public class CityRepository(AppDbContext context) : ICityRepository
 {
-    private readonly SolarWatchDbContext _context = context;
+    private readonly AppDbContext _context = context;
 
     public async Task<IEnumerable<City>> GetAll()
     {
