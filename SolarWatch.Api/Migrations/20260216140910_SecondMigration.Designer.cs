@@ -12,8 +12,8 @@ using SolarWatch.Api.Data;
 namespace SolarWatch.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260216120328_appdbinitalcreate")]
-    partial class appdbinitalcreate
+    [Migration("20260216140910_SecondMigration")]
+    partial class SecondMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
