@@ -30,12 +30,12 @@ const SolarCard = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
+    <div className="bg-white rounded-xl shadow-xl border border-gray-100 relative">
       <div className="p-6">
         <SolarForm onSearch={handleSearch} isLoading={loading} />
       </div>
       {(solarData || error) && (
-        <div className="bg-gray-50 p-6 border-t border-gray-100">
+        <div className="bg-gray-50 p-6 border-t border-gray-100 rounded-b-xl">
           <SolarResponse 
             data={solarData} 
             error={error} 

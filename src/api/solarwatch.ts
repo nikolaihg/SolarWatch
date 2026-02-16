@@ -9,4 +9,8 @@ export const getSolarWatch = (city: string, date?: string) => {
   return get<SolarDto>(`/solarwatch?${params.toString()}`);
 };
 
+export const getCityNames = () => {
+  return get<{ name: string }[]>('/city/names');
+};
+
 
