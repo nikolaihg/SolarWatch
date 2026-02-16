@@ -39,8 +39,7 @@ public class AuthController : ControllerBase
         var token = _jwtService.GenerateToken(user, roles);
 
         var expiresIn = int.Parse(_config["JWT_EXPIRES_IN_MINUTES"] ?? throw new ArgumentNullException("JWT_EXPIRES_IN_MINUTES not configured"));
-        var userInfo = new UserInfoDto(user.Id, user.Email!);
-        var response = new AuthResponseDto(token, expiresIn, userInfo);
+        var response = new AuthResponseDto(token, expiresIn);
 
         return Ok(response);
     }
@@ -63,8 +62,7 @@ public class AuthController : ControllerBase
             _config["JWT_EXPIRES_IN_MINUTES"]
             ?? throw new InvalidOperationException("JWT_EXPIRES_IN_MINUTES not configured")
         );
-        var userInfo = new UserInfoDto(user.Id, user.Email!);
-        var response = new AuthResponseDto(token, expiresIn, userInfo);
+        var response = new AuthResponseDto(token, expiresIn);
 
         return Ok(response);
     }

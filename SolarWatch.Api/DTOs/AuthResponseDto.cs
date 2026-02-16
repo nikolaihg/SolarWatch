@@ -4,12 +4,10 @@ public class AuthResponseDto
 {
     public string Token { get; set; }
     public int ExpiresIn { get; set; }
-    public UserInfoDto User { get; set; }
 
-    public AuthResponseDto(string token, int expiresIn, UserInfoDto user)
+    public AuthResponseDto(string token, int expiresIn)
     {
         Token = token;
         ExpiresIn = expiresIn;
-        User = user;
     }
 }
