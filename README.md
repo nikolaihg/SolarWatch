@@ -4,11 +4,25 @@
 - frontend/ # react vite frontend
 
 ## Secrets
-1. `dotnet user-secrets init`
-2. `dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=solarwatch;Username=USERNAME;Password=PASSWORD"`
-3. `dotnet user-secrets set "OpenWeather:ApiKey" "YOURAPIKEY"`
-4. `dotnet user-secrets set "Jwt:SigningKey" "CHANGE_ME_TO_A_LONG_RANDOM_SECRET_32CHARS_MIN`
-
+0. ```bash 
+cd .\backend\SolarWatch.Api\
+```
+1. 
+```bash
+dotnet user-secrets init
+```
+2. 
+```bash
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=solarwatch;Username=USERNAME;Password=PASSWORD"
+```
+3. 
+```bash
+dotnet user-secrets set "OpenWeather:ApiKey" "YOURAPIKEY"
+```
+4. 
+```bash
+dotnet user-secrets set "Jwt:SigningKey" "CHANGE_ME_TO_A_LONG_RANDOM_SECRET_32CHARS_MIN
+```
 
 ## Docker 
 - backend
@@ -58,6 +72,3 @@ cp .env.docker.example. env.docker
 ```bash
 docker-compose --env-file .env.docker up --build
 ```
-
-### Frontend
-
