@@ -12,7 +12,7 @@ using SolarWatch.Api.Data;
 namespace SolarWatch.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260216121616_InitialCreate")]
+    [Migration("20260217115834_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
