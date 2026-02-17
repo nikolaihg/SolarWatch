@@ -38,7 +38,7 @@ public class AuthController : ControllerBase
         var roles = await _userManager.GetRolesAsync(user);
         var token = _jwtService.GenerateToken(user, roles);
 
-        var expiresIn = int.Parse(_config["JWT_EXPIRES_IN_MINUTES"] ?? throw new ArgumentNullException("JWT_EXPIRES_IN_MINUTES not configured"));
+        var expiresIn = int.Parse(_config["Jwt:ExpiresInMinutes"] ?? throw new ArgumentNullException("Jwt:ExpiresInMinutes not configured"));
         var response = new AuthResponseDto(token, expiresIn);
 
         return Ok(response);
@@ -59,8 +59,8 @@ public class AuthController : ControllerBase
         var token = _jwtService.GenerateToken(user, roles);
 
         var expiresIn = int.Parse(
-            _config["JWT_EXPIRES_IN_MINUTES"]
-            ?? throw new InvalidOperationException("JWT_EXPIRES_IN_MINUTES not configured")
+            _config["Jwt:ExpiresInMinutes"]
+            ?? throw new InvalidOperationException("Jwt:ExpiresInMinutes not configured")
         );
         var response = new AuthResponseDto(token, expiresIn);
 

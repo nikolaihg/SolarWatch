@@ -1,5 +1,4 @@
 using System.Text;
-using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -9,28 +8,19 @@ using SolarWatch.Api.Data;
 using SolarWatch.Api.Repositories;
 using SolarWatch.Api.Services;
 
-DotEnv.Load();
-
 var builder = WebApplication.CreateBuilder(args);
 
-string jwtIssuer = Environment.GetEnvironmentVariable("JWT_VALID_ISSUER")!;
-string jwtAudience = Environment.GetEnvironmentVariable("JWT_VALID_AUDIENCE")!;
-string jwtKey = Environment.GetEnvironmentVariable("JWT_SIGNING_KEY")!;
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-string BuildConnectionString()
+var jwtIssuer = builder.Configuration["Jwt:ValidIssuer"];
+var jwtAudience = builder.Configuration["Jwt:ValidAudience"];
+var jwtKey = builder.Configuration["Jwt:SigningKey"];
+
+if (string.IsNullOrEmpty(jwtIssuer) || string.IsNullOrEmpty(jwtAudience) || string.IsNullOrEmpty(jwtKey))
 {
-    var host = builder.Configuration["DB_HOST"] ?? throw new ArgumentException("DB_HOST is required");
-    var port = builder.Configuration["DB_PORT"] ?? throw new ArgumentException("DB_PORT is required");
-    var database = builder.Configuration["DB_NAME"] ?? throw new ArgumentException("DB_NAME is required");
-    var username = builder.Configuration["DB_USER"] ?? throw new ArgumentException("DB_USER is required");
-    var password = builder.Configuration["DB_PASSWORD"] ?? throw new ArgumentException("DB_PASSWORD is required");
-
-    return $"Host={host};Port={port};Username={username};Password={password};Database={database}";
+    throw new ApplicationException("JWT configuration is missing");
 }
 
-var connectionString = BuildConnectionString();
-
-builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddAuthentication(options =>
     {
