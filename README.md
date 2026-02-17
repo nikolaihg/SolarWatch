@@ -47,9 +47,17 @@ docker run -p 8080:8080 \
   solarwatch-backend
 ```
 
+### Docker compose 
+1. 
+```bash
+cp .env.docker.example. env.docker
+```
+2. Change to your secrets
 
-`docker build -f backend/Dockerfile -t solarwatch-api .`
-`docker run --env-file .env.docker -p 8080:8080 solarwatch-api`
+3. 
+```bash
+docker-compose --env-file .env.docker up --build
+```
 
 ### Frontend
 

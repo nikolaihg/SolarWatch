@@ -80,19 +80,35 @@ builder.Services.AddScoped<ISolarDataRepository, SolarDataRepository>();
 
 var app = builder.Build();
 
-// Initialize roles
+// Automatically apply migrations at startup
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var roles = new[] { "User", "Admin" };
-    foreach (var role in roles)
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var services = scope.ServiceProvider;
+    try
     {
-        if (!await roleManager.RoleExistsAsync(role))
+        Console.WriteLine("Applying Database Migrations...");
+        dbContext.Database.Migrate();
+        Console.WriteLine("Database Migrations Applied Successfully.");
+        
+        // Initialize roles
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        var roles = new[] { "User", "Admin" };
+        foreach (var role in roles)
         {
-            await roleManager.CreateAsync(new IdentityRole(role));
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
         }
     }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"An error occurred while migrating or seeding the database: {ex.Message}");
+        throw;
+    }
 }
+
 
 if (app.Environment.IsDevelopment())
 {
