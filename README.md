@@ -17,7 +17,39 @@
     - node dockerfile
 
 ### Backend
+
+# solar watch
+
+## Endpoint Design
+- base url: `api/solarwatch`
+- GET `api/solarwatch?cites='{name:string}&date={YYYY-MM-DD}`
+- Example: `api/solarwatch?cities=bergen&2026-01-20*
+- Returns:
+```json
+{
+  "sunrise":"7:27:02 AM",
+  "sunset":"5:05:55 PM"
+}
+```
+
+## Running with Docker
+
+Build the image:
+```bash
+docker build -f backend/Dockerfile -t solarwatch-backend .
+```
+
+Run the container (replace secrets with actual values):
+```bash
+docker run -p 8080:8080 \
+  -e "Jwt:SigningKey=YOUR_SECRET_KEY" \
+  -e "OpenWeather:ApiKey=YOUR_OPENWEATHER_API_KEY" \
+  solarwatch-backend
+```
+
+
 `docker build -f backend/Dockerfile -t solarwatch-api .`
 `docker run --env-file .env.docker -p 8080:8080 solarwatch-api`
 
 ### Frontend
+
