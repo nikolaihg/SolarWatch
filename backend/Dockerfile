@@ -19,6 +19,7 @@ WORKDIR /app
 
 # Set environment to Docker to load appsettings.Docker.json
 ENV ASPNETCORE_ENVIRONMENT=Docker
+ENV ASPNETCORE_URLS=http://+:8080
 
 COPY --from=build /app/publish .
 
