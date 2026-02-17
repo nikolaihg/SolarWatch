@@ -21,8 +21,8 @@ public class SunriseSunsetService
         _httpClient = client;
         _solarDataRepository = solarDataRepository;
         _cityRepository = cityRepository;
-        _sunrisesunsetUrl = config["SUNRISESUNSET_URL"] ??
-                            throw new ArgumentNullException("SUNRISESUNSET_URL not configured.");
+        _sunrisesunsetUrl = config["SunriseSunset:BaseUrl"] ??
+                            throw new ArgumentNullException("SunriseSunset URL not configured.");
     }
 
     public async Task<SunriseSunsetResult> GetSunriseSunset(double latitude, double longitude)

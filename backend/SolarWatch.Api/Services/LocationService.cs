@@ -19,10 +19,10 @@ public class LocationService : ILocationService
         _logger = logger;
         _client = client;
         _cityRepository = cityRepository;
-        _openWeatherUrl = config["OPENWEATHER_URL"] ??
+        _openWeatherUrl = config["OpenWeather:BaseUrl"] ??
                           throw new ArgumentNullException("OpenWeather URL not configured.");
-        _openWeatherApiKey = config["OPENWEATHER_API_KEY"] ??
-                             throw new ArgumentNullException("OpenWeather API URL not configured.");
+        _openWeatherApiKey = config["OpenWeather:ApiKey"] ??
+                             throw new ArgumentNullException("OpenWeather API Key not configured.");
     }
 
     public async Task<LatitudeLongitudeResult> GetCordinates(string city)

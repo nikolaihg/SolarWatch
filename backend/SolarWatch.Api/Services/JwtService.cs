@@ -15,18 +15,18 @@ public class JwtService : IJwtService
 
     public JwtService(IConfiguration config)
     {
-        _issuer = config["JWT_VALID_ISSUER"] 
-                  ?? throw new ArgumentNullException("JWT_VALID_ISSUER not configured.");
+        _issuer = config["Jwt:ValidIssuer"] 
+                  ?? throw new ArgumentNullException("Jwt:ValidIssuer not configured.");
 
-        _audience = config["JWT_VALID_AUDIENCE"] 
-                    ?? throw new ArgumentNullException("JWT_VALID_AUDIENCE not configured.");
+        _audience = config["Jwt:ValidAudience"] 
+                    ?? throw new ArgumentNullException("Jwt:ValidAudience not configured.");
 
-        _keystring = config["JWT_SIGNING_KEY"] 
-                     ?? throw new ArgumentNullException("JWT_SIGNING_KEY not configured.");
+        _keystring = config["Jwt:SigningKey"] 
+                     ?? throw new ArgumentNullException("Jwt:SigningKey not configured.");
 
         _expiresInMinutes = int.Parse(
-            config["JWT_EXPIRES_IN_MINUTES"] 
-            ?? throw new ArgumentNullException("JWT_EXPIRES_IN_MINUTES not configured.")
+            config["Jwt:ExpiresInMinutes"] 
+            ?? throw new ArgumentNullException("Jwt:ExpiresInMinutes not configured.")
         );
     }
 
