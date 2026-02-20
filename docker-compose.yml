@@ -2,7 +2,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: ./backend/Dockerfile
     container_name: solarwatch-api
     ports:
       - "8080:8080"
@@ -15,6 +15,21 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+    container_name: solarwatch-frontend
+    ports:
+      - "3000:3000"
+    env_file: .env.docker
+    depends_on:
+      - api
+      - postgres
+
   postgres:
     image: postgres:latest
     container_name: solarwatch-postgres
